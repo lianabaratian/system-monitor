@@ -1,6 +1,8 @@
 import { app, BrowserWindow } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import { registerIpcHandlers } from './ipc/ipcHandlers'
+import { createSystemInfoService } from './services/ServiceFactory'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -29,6 +31,8 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
+      contextIsolation: true,
+      nodeIntegration: false,
     },
   })
 
@@ -63,4 +67,8 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  const systemInfoService = createSystemInfoService()
+  registerIpcHandlers(systemInfoService)
+  createWindow()
+})
