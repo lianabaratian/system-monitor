@@ -59,6 +59,7 @@
 .disk-row__header { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; }
 .disk-row__mount { font-weight: 600; }
 .disk-row__usage { color: var(--text-muted); }
+.disk-row .info-grid { margin-top: 4px; }
 
 .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .search, .interval-control select {

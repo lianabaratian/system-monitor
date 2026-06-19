@@ -21,11 +21,15 @@ export function DiskPanel({ interval }: DiskPanelProps) {
           <div key={disk.mount} className="disk-row">
             <div className="disk-row__header">
               <span className="disk-row__mount">{disk.mount}</span>
-              <span className="disk-row__usage">
-                {formatBytes(disk.used)} / {formatBytes(disk.total)} ({formatPercent(disk.usedPercent)})
-              </span>
+              <span className="disk-row__usage">{formatPercent(disk.usedPercent)}</span>
             </div>
             <UsageBar percent={disk.usedPercent} />
+            <dl className="info-grid">
+              <div><dt>Total</dt><dd>{formatBytes(disk.total)}</dd></div>
+              <div><dt>Used</dt><dd>{formatBytes(disk.used)}</dd></div>
+              <div><dt>Free</dt><dd>{formatBytes(disk.free)}</dd></div>
+              <div><dt>Usage</dt><dd>{formatPercent(disk.usedPercent)}</dd></div>
+            </dl>
           </div>
         ))}
     </section>
