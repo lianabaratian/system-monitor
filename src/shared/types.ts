@@ -37,3 +37,10 @@ export const IPC_CHANNELS = {
 } as const
 
 export type IpcChannel = (typeof IPC_CHANNELS)[keyof typeof IPC_CHANNELS]
+
+export interface SystemApi {
+  getOsInfo(): Promise<OsInfo>
+  getProcesses(): Promise<ProcessInfo[]>
+  getMemoryInfo(): Promise<MemoryInfo>
+  getDiskInfo(): Promise<DiskInfo[]>
+}

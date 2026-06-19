@@ -1,6 +1,8 @@
 import { ipcRenderer, contextBridge } from 'electron'
+import { IPC_CHANNELS } from '../src/shared/types'
+import type { SystemApi } from '../src/shared/types'
 
-// --------- Expose some API to the Renderer process ---------
+// --------- Expose the generic ipcRenderer bridge (from template) ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
   on(...args: Parameters<typeof ipcRenderer.on>) {
     const [channel, listener] = args
@@ -18,7 +20,13 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     const [channel, ...omit] = args
     return ipcRenderer.invoke(channel, ...omit)
   },
-
-  // You can expose other APTs you need here.
-  // ...
 })
+
+const systemApi: SystemApi = {
+  getOsInfo: () => ipcRenderer.invoke(IPC_CHANNELS.GET_OS_INFO),
+  getProcesses: () => ipcRenderer.invoke(IPC_CHANNELS.GET_PROCESSES),
+  getMemoryInfo: () => ipcRenderer.invoke(IPC_CHANNELS.GET_MEMORY_INFO),
+  getDiskInfo: () => ipcRenderer.invoke(IPC_CHANNELS.GET_DISK_INFO),
+}
+
+contextBridge.exposeInMainWorld('api', systemApi)
