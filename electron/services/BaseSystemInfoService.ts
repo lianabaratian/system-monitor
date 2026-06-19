@@ -45,13 +45,18 @@ export abstract class BaseSystemInfoService implements SystemInfoService {
     const disks = await si.fsSize()
     return disks
       .filter((d) => this.shouldIncludeDisk(d.type, d.mount))
-      .map((d) => ({
-        mount: d.mount,
-        total: d.size,
-        used: d.used,
-        free: d.size - d.used,
-        usedPercent: d.use ?? 0, 
-      }))
+      .map((d) => {
+        const total = d.size
+        const free = d.available          // real free space in the container
+        const used = total - free         // derive used so it matches free + total
+        return {
+          mount: d.mount,
+          total,
+          used,
+          free,
+          usedPercent: total > 0 ? (used / total) * 100 : 0, // computed, not trusted
+        }
+      })
   }
 
   protected getUsername(): string | null {
